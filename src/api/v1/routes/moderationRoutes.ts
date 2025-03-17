@@ -10,165 +10,196 @@ import {
 const router: Router = Router();
 /**
  * @swagger
- * /post/{id}:
+ * /api/v1/moderation/post/{id}:
  *   get:
- *     summary: Get a post by ID
+ *     summary: "Retrieve a post by ID"
+ *     description: "Fetch a specific post by its unique ID."
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the post to retrieve
+ *         description: The ID of the post
+ *         schema:
+ *           type: string
+ *           example: "1234"
  *     responses:
  *       200:
- *         description: Post retrieved successfully
+ *         description: "Successfully retrieved post."
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                 content:
- *                   type: string
- *                 author:
- *                   type: string
+ *             example:
+ *               id: "1234"
+ *               content: "This is a post"
+ *               userId: "5678"
+ *       400:
+ *         description: "Invalid ID supplied"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Invalid ID"
+ *               details: "The ID must be a valid post ID."
  *       404:
- *         description: Post not found
+ *         description: "Post not found"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Post not found"
+ *       500:
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Server error"
  */
 router.get("/post/:id", getPostById);
 /**
  * @swagger
- * /post/{id}/moderate:
+ * /api/v1/moderation/post/{id}/moderate:
  *   post:
- *     summary: Moderate a post
+ *     summary: "Moderate a post"
+ *     description: "Perform moderation actions on a post (e.g., flag or remove)."
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         description: The ID of the post to moderate
+ *         schema:
+ *           type: string
+ *           example: "1234"
+ *       - in: body
+ *         name: action
+ *         required: true
+ *         description: Action to take on the post (e.g., flag, remove).
+ *         schema:
+ *           type: object
+ *           properties:
+ *             action:
+ *               type: string
+ *               enum: [flag, remove]
+ *               example: "flag"
  *     responses:
  *       200:
- *         description: Post moderated successfully
+ *         description: "Post moderated successfully."
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "Post flagged successfully"
  *       400:
- *         description: Invalid request or post moderation failed
+ *         description: "Invalid action supplied"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Invalid action"
+ *               details: "The action must be either 'flag' or 'remove'."
+ *       404:
+ *         description: "Post not found"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Post not found"
+ *       500:
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Server error"
  */
 router.post("/post/:id/moderate", moderatePost);
 /**
  * @swagger
- * /user/{id}/profile:
+ * /api/v1/moderation/user/{id}/profile:
  *   get:
- *     summary: Get user profile by ID
+ *     summary: "Retrieve a user's profile"
+ *     description: "Fetch a user’s profile by their unique ID."
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: The ID of the user to retrieve profile for
+ *         description: The ID of the user
+ *         schema:
+ *           type: string
+ *           example: "5678"
  *     responses:
  *       200:
- *         description: User profile retrieved successfully
+ *         description: "Successfully retrieved user profile."
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                   description: The user's ID
- *                 username:
- *                   type: string
- *                   description: The username of the user
- *                 bio:
- *                   type: string
- *                   description: A brief bio of the user
- *                 isFlagged:
- *                   type: boolean
- *                   description: Whether the user has been flagged
- *                 joinedAt:
- *                   type: string
- *                   format: date-time
- *                   description: Date and time when the user joined
- *                 postsCount:
- *                   type: integer
- *                   description: The number of posts made by the user
+ *             example:
+ *               id: "5678"
+ *               username: "john_doe"
+ *               flaggedPosts: 5
+ *       400:
+ *         description: "Invalid ID supplied"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Invalid user ID"
+ *               details: "The user ID must be valid."
  *       404:
- *         description: User not found
- *       500:
- *         description: Internal server error
+ *         description: "User not found"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "User not found"
  */
 router.get("/user/:id/profile", getUserProfile);
 /**
  * @swagger
- * /user/{id}/flag:
+ * /api/v1/moderation/user/{id}/flag:
  *   post:
- *     summary: Flag a user for violating rules
+ *     summary: "Flag a user"
+ *     description: "Flag a user for inappropriate behavior."
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         description: The ID of the user to flag
- *       - in: body
- *         name: reason
- *         description: The reason for flagging the user
- *         required: true
  *         schema:
- *           type: object
- *           properties:
- *             reason:
- *               type: string
- *               description: Reason for flagging the user (e.g., "Spam")
+ *           type: string
+ *           example: "5678"
  *     responses:
  *       200:
- *         description: User flagged successfully
+ *         description: "User flagged successfully."
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 userId:
- *                   type: string
- *                   description: The ID of the user flagged
- *                 reason:
- *                   type: string
- *                   description: The reason why the user was flagged
- *                 flaggedAt:
- *                   type: string
- *                   format: date-time
- *                   description: Date and time when the user was flagged
+ *             example:
+ *               message: "User flagged successfully"
  *       400:
- *         description: Invalid request or flagging failed
+ *         description: "Invalid user ID"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Invalid user ID"
  *       500:
- *         description: Internal server error
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Server error"
  */
 router.post("/user/:id/flag", flagUser);
 /**
  * @swagger
- * /content/flags/stats:
+ * /api/v1/moderation/content/flags/stats:
  *   get:
- *     summary: Get statistics on flagged content
+ *     summary: "Get flagged content statistics"
+ *     description: "Retrieve statistics about flagged content (internal use only)."
  *     responses:
  *       200:
- *         description: Flagged content statistics
+ *         description: "Successfully retrieved statistics."
  *         content:
  *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 totalFlaggedPosts:
- *                   type: integer
- *                   description: Total number of flagged posts
- *                 totalFlaggedUsers:
- *                   type: integer
- *                   description: Total number of flagged users
- *                 mostCommonFlagReason:
- *                   type: string
- *                   description: The most common reason for flagging content
- *                 flaggedContentByCategory:
- *                   type: object
- *                   description: A breakdown of flagged content by category
- *                   additionalProperties:
- *                     type: integer
+ *             example:
+ *               flaggedPosts: 50
+ *               flaggedUsers: 10
  *       500:
- *         description: Internal server error
+ *         description: "Internal server error"
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Server error"
+ *     tags:
+ *       - Internal Use Only
  */
 router.get("/content/flags/stats", getFlaggedContentStats);
 
