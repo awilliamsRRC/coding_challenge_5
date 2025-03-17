@@ -1,10 +1,44 @@
 import { Request, Response } from "express";
 
+
+/**
+ * @swagger
+ * /post/{id}:
+ *   get:
+ *     summary: Get a post by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the post to retrieve
+ *     responses:
+ *       200:
+ *         description: Post retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: The post ID
+ *                 content:
+ *                   type: string
+ *                   description: The content of the post
+ *                 author:
+ *                   type: string
+ *                   description: The author of the post
+ *       404:
+ *         description: Post not found
+ *       500:
+ *         description: Internal server error
+ */
 /**
  * Retrieve a post by ID
  * @param req - Express request object
  * @param res - Express response object
  */
+
 export const getPostById = (req: Request, res: Response): void => {
 	res.status(200).json({
 		message: "Post retrieved successfully",
@@ -18,6 +52,31 @@ export const getPostById = (req: Request, res: Response): void => {
 		},
 	});
 };
+/**
+ * @swagger
+ * /user/{id}/profile:
+ *   get:
+ *     summary: Get user profile by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user to retrieve profile for
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 bio:
+ *                   type: string
+ */
 
 /**
  * Retrieve user profile by ID
@@ -37,6 +96,34 @@ export const getUserProfile = (req: Request, res: Response): void => {
 		},
 	});
 };
+/**
+ * @swagger
+ * /content/flags/stats:
+ *   get:
+ *     summary: Get statistics on flagged content
+ *     responses:
+ *       200:
+ *         description: Flagged content statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalFlaggedPosts:
+ *                   type: integer
+ *                   description: Total number of flagged posts
+ *                 totalFlaggedUsers:
+ *                   type: integer
+ *                   description: Total number of flagged users
+ *                 mostCommonFlagReason:
+ *                   type: string
+ *                   description: The most common reason for flagging content
+ *                 flaggedContentByCategory:
+ *                   type: object
+ *                   description: A breakdown of flagged content by category
+ *                   additionalProperties:
+ *                     type: integer
+ */
 
 /**
  * Retrieve statistics on flagged content
@@ -58,6 +145,24 @@ export const getFlaggedContentStats = (req: Request, res: Response): void => {
 		},
 	});
 };
+/**
+ * @swagger
+ * /post/{id}/moderate:
+ *   post:
+ *     summary: Moderate a post by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the post to moderate
+ *     responses:
+ *       200:
+ *         description: Post moderated successfully
+ *       400:
+ *         description: Invalid request or post moderation failed
+ *       500:
+ *         description: Internal server error
+ */
 
 /**
  * Moderate a post by ID
@@ -75,6 +180,24 @@ export const moderatePost = (req: Request, res: Response): void => {
 		},
 	});
 };
+
+/**
+ * @swagger
+ * /user/{id}/flag:
+ *   post:
+ *     summary: Flag a user for violating rules
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the user to flag
+ *     responses:
+ *       200:
+ *         description: User flagged successfully
+ *       400:
+ *         description: Invalid request or flagging failed
+ *       500:
+ *         description: Internal
 
 /**
  * Flag a user by ID
