@@ -1,9 +1,17 @@
 import express, { Express, Request, Response } from "express";
 import moderationRoutes from "./api/v1/routes/moderationRoutes";
+import  setupSwagger  from '../config/swagger';
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
 
 const app: Express = express();
 app.use(express.json());
 
+// Set up Swagger API documentation
+setupSwagger(app);
 /**
  * Mount moderation routes on /api/v1/moderation
  */
